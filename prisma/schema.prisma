@@ -1,0 +1,38 @@
+// schema.prisma
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  login     String   @unique
+  name      String?
+  password  String
+  createdAt DateTime @default(now())
+
+  tasks Task[]
+}
+
+model Task {
+  id        String   @id @default(cuid())
+  title     String?
+  start     String
+  end       String
+  color     String
+  done      Boolean  @default(false)
+  emoji     String?
+  date      DateTime?
+  category  String?
+  weekly    Boolean  @default(false)
+  weeklyDay String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
